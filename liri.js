@@ -18,7 +18,27 @@ if (input === "concert-this") {
 }
 
 //spotify-this-song
+if (input === "spotify-this-song") {
+    var songName = process.argv[3];
+    if (!songName){
+        songName= "The Sign"
+    }
+    spotify.search({type: 'track', query: songName}, function(err, data) {
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        } else {
+            output =
+                "|+-+-+-+-+-+->LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|" +
+                "\n" + "Artist Name: " + data.tracks.items[0].album.artists[0].name +
+                "\n" + "Song Name: " + "'" + songName.toUpperCase() + "'" +
+                "\n" + "Album Name: " + data.tracks.items[0].album.name +
+                "\n" + "URL: " + data.tracks.items[0].album.external_urls.spotify;
+            console.log(output);
+        }
 
+    
+    });
+};
 
 //movie-this
 if (input === "movie-this"){
@@ -28,7 +48,7 @@ if (input === "movie-this"){
         function(response) {
           
           var output =
-            "===========LIRI FOUND THIS FOR YOU===========" +
+            "|+-+-+-+-+-+->LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|" +
                 "\n" + 'Title: ' + response.data.Title +
                 "\n" + 'Year: ' + response.data.Year +
                 "\n" + 'Rated: ' + response.data.Rated +
@@ -64,7 +84,7 @@ if (input === "movie-this"){
         function(response) {
           
           var output =
-            "===========LIRI FOUND THIS FOR YOU===========" +
+            "|+-+-+-+-+-+->LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|" +
                 "\n" + 'Title: ' + response.data.Title +
                 "\n" + 'Year: ' + response.data.Year +
                 "\n" + 'Rated: ' + response.data.Rated +
