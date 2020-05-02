@@ -9,22 +9,98 @@ var fs = require("fs");
 var inquirer = require("inquirer");
 var input = process.argv[2];
 var userOutput = process.argv[3];
+
+function question() {
+    inquirer.prompt(
+        {
+            type: "list",
+            message: "What would you like the Great LIRI to find for you?",
+            choices: ["Search for concerts.", "Search for songs.", "Search for movies.", "Have LIRI choose.", "Depart from the Great LIRI" ],
+            name: "select"
+        }
+    ).then(function(response) {
+        switch (response.select) {
+            case "Search for concerts.":
+                inquirer.prompt(
+                    {
+                        type: "input",
+                        message: "What Band or Artists concerts do you want to know more about?",
+                        name: "pinput"
+                    })
+                    .then(function(answer) {
+                        concert(answer.pinput.trim());
+                    });
+                break;
+            case "Search for songs.":
+                inquirer.prompt(
+                    {
+                        type: "input",
+                        message: "What is the name of the song?",
+                        name: "pinput"
+                    })
+                    .then(function(answer) {
+                        tunes(answer.pinput.trim());
+                    });
+                break;
+            case "Search for movies.":
+                inquirer.prompt(
+                    {
+                        type: "input",
+                        message: "What is the name of the movie?",
+                        name: "pinput"
+                    })
+                    .then(function(answer) {
+                        flicks(answer.pinput.trim());
+                    });
+                break;
+            case "Have LIRI choose.":
+                inquirer.prompt(
+                    {
+                        type: "input",
+                        message: "What is the name of the movie?",
+                        name: "pinput"
+                    })
+                    .then(function(answer) {
+                        flicks(answer.pinput.trim());
+                    });
+                break;
+            case "Depart from the Great LIRI":
+                inquirer.prompt(
+                    {
+                        type: "input",
+                        message: "What is the name of the movie?",
+                        name: "pinput"
+                    })
+                    .then(function(answer) {
+                        flicks(answer.pinput.trim());
+                    });
+                break;
+
+        }
+    })
+}
+
+
+
+
 //make it so liri.js can take in one of the following commands:
 //concert-this
-if (input === "concert-this") {
-    if (!userOutput){
-        userOutput = "barenaked ladies"
+function concert(artist) {
+    if (!artist){
+        artist = "barenaked ladies"
     }
     axios
-    .get("https://rest.bandsintown.com/artists/" + userOutput + "/events?app_id=codingbootcamp")
+    .get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
     .then(function(response) {
         console.log(response.data[0].lineup[0]);
     
     for (var i = 0; i < response.data.length; i++) {
         
-        var result = "Venue Name: " + response.data[i].venue.name + "\n"
-                    + "City: " + response.data[i].venue.city + "\n"
-                    + "Date(MM/DD/YYYY): " + moment(response.data[i].datetime).format('MM DD YYYY') + "\n"
+        var result = "\n|+-+-+-+-+-+->The Great LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|\n"
+                        + "\nArtist/Band: " + response.data[i].lineup[0] + "\n" 
+                        + "Venue Name: " + response.data[i].venue.name + "\n"
+                        + "Location: " + response.data[i].venue.location + " " + response.data[i].venue.country + "\n"
+                        + "Date: " + moment(response.data[i].datetime).format("MM/DD/YYYY hh:00 A") + "\n"
         
             
         console.log(result);
@@ -42,7 +118,7 @@ if (input === "spotify-this-song") {
     spotify.search({type: 'track', query: userOutput, limit: 3 }).then(function(response) {
        for (var i = 0; i < 3; i++) {
            var result =
-                "\n|+-+-+-+-+-+->LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|" +
+                "\n|+-+-+-+-+-+->The Great LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|" +
                 "\n" + "Artist/Band: " + response.tracks.items[i].album.artists[0].name +
                 "\n" + "Song: " + "'" + userOutput.toUpperCase() + "'" +
                 "\n" + "Album: " + response.tracks.items[i].album.name +
@@ -63,16 +139,15 @@ if (input === "movie-this"){
         function(response) {
           
           var output =
-            "\n|+-+-+-+-+-+->LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|" +
+            "\n|+-+-+-+-+-+->The Great LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|" +
                 "\n" + 'Title: ' + response.data.Title +
                 "\n" + 'Year: ' + response.data.Year +
                 "\n" + 'Rated: ' + response.data.Rated +
-                "\n" + 'IMDB Rating: ' + response.data.imdbRating +
                 "\n" + 'Country: ' + response.data.Country +
                 "\n" + 'Language: ' + response.data.Language +
                 "\n" + 'Plot: ' + response.data.Plot +
                 "\n" + 'Actors: ' + response.data.Actors +
-                "\n" + 'Tomato Rating: ' + response.data.Ratings[1].Value +
+                "\n" + 'Rotten Tomatoes Rating: ' + response.data.Ratings[1].Value +
                 "\n" + 'IMDb Rating: ' + response.data.imdbRating + "\n";
 
           console.log(output);
@@ -97,3 +172,5 @@ if (input === "movie-this"){
     };
 
 //do-what-it-says
+
+question();
