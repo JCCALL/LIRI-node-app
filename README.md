@@ -31,7 +31,7 @@ node liri.js
 5. The following will be presented:
 ```
 this is loaded
-? What would you like to do? (Use arrow keys)
+? What would you like the Great LIRI to find for you? (Use arrow keys)
 > Search for concerts.
   Search for songs.
   Search for movies.
