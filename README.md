@@ -29,18 +29,28 @@ SPOTIFY_SECRET=be2ab6c918514b3f808422a3962a3ac9
 node liri.js
 ```
 
-```mermaid
-graph LR
-A[What would you like the Great LIRI to find for you?] --> B((Search for concerts.))
-A --> C((Search for songs.))
-A --> D((Search for movies.))
-A --> E((Have LIRI choose.))
-A --> F((Exit))
-B --> G{5 Concert Results}
-C --> H{2 Song Results}
-D --> I{Movie Result}
-E --> J{LIRI Picks}
-F --> K{GOODBYE}
+```
+[What would you like the Great LIRI to find for you?] 
+        |              |  |  |  |  
+(Search for concerts.) |  |  |  |  
+        |              |  |  |  |  
+ {5 Concert Results}   |  |  |  |  
+                       |  |  |  | 
+(Search for songs.) <--^  |  |  |  
+        |                 |  |  |                            
+ {2 Song Results}         |  |  |  
+                          |  |  |  
+(Search for moives.) <----^  |  |  
+        |                    |  |   
+ {Movie Results}             |  |  
+                             |  |  
+(Have LIRI choose.) <--------^  |
+        |                       |
+ {LIRI Result}                  |
+                                |
+(Exit) <------------------------^
+      |
+ {The Great and Powerful LIRI comands you to depart from my sight!}                                      
 ```
 
 5. Follow the instructions, have fun.
