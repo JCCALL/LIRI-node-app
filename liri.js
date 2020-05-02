@@ -7,15 +7,14 @@ var moment = require('moment');
 var axios = require('axios').default;
 var fs = require("fs");
 var inquirer = require("inquirer");
-var input = process.argv[2];
-var userOutput = process.argv[3];
+
 
 function question() {
     inquirer.prompt(
         {
             type: "list",
             message: "What would you like the Great LIRI to find for you?",
-            choices: ["Search for concerts.", "Search for songs.", "Search for movies.", "Have LIRI choose.", "Depart from the Great LIRI" ],
+            choices: ["Search for concerts.", "Search for songs.", "Search for movies.", "Have LIRI choose.", "Exit" ],
             name: "select"
         }
     ).then(function(response) {
@@ -54,31 +53,14 @@ function question() {
                     });
                 break;
             case "Have LIRI choose.":
-                inquirer.prompt(
-                    {
-                        type: "input",
-                        message: "What is the name of the movie?",
-                        name: "pinput"
-                    })
-                    .then(function(answer) {
-                        flicks(answer.pinput.trim());
-                    });
+                liriSuprise()
                 break;
             case "Depart from the Great LIRI":
-                inquirer.prompt(
-                    {
-                        type: "input",
-                        message: "What is the name of the movie?",
-                        name: "pinput"
-                    })
-                    .then(function(answer) {
-                        flicks(answer.pinput.trim());
-                    });
+                console.log("The Great and Powerful LIRI comands you to depart from my sight!")
                 break;
-
         }
     })
-}
+};
 
 
 
@@ -92,9 +74,8 @@ function concert(artist) {
     axios
     .get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
     .then(function(response) {
-        console.log(response.data[0].lineup[0]);
-    
-    for (var i = 0; i < response.data.length; i++) {
+        
+    for (var i = 0; i < 5; i++) {
         
         var result = "\n|+-+-+-+-+-+->The Great LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|\n"
                         + "\nArtist/Band: " + response.data[i].lineup[0] + "\n" 
@@ -110,17 +91,17 @@ function concert(artist) {
 
 
 //spotify-this-song
-if (input === "spotify-this-song") {
+function tunes(songName) {
     
-    if (!userOutput){
-        userOutput= "Black Betty"
+    if (!songName){
+        songName= "Black Betty"
     }
-    spotify.search({type: 'track', query: userOutput, limit: 3 }).then(function(response) {
-       for (var i = 0; i < 3; i++) {
+    spotify.search({type: 'track', query: songName, limit: 5 }).then(function(response) {
+       for (var i = 0; i < 5; i++) {
            var result =
-                "\n|+-+-+-+-+-+->The Great LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|" +
+                "\n|+-+-+-+-+-+->The Great LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|\n" +
                 "\n" + "Artist/Band: " + response.tracks.items[i].album.artists[0].name +
-                "\n" + "Song: " + "'" + userOutput.toUpperCase() + "'" +
+                "\n" + "Song: " + "'" + songName.toUpperCase() + "'" +
                 "\n" + "Album: " + response.tracks.items[i].album.name +
                 "\n" + "URL: " + response.tracks.items[i].album.external_urls.spotify + "\n";
                 
@@ -130,16 +111,16 @@ if (input === "spotify-this-song") {
 };
 
 //movie-this
-if (input === "movie-this"){
+function flicks(movie){
     
-    if(!userOutput){
-        userOutput = "Logan Lucky";
+    if(!movie){
+        movie = "Logan Lucky";
         }
-    axios.get("http://www.omdbapi.com/?t=" + userOutput + "&y=&plot=short&apikey=trilogy").then(
+    axios.get("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy").then(
         function(response) {
           
           var output =
-            "\n|+-+-+-+-+-+->The Great LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|" +
+            "\n|+-+-+-+-+-+->The Great LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|\n" +
                 "\n" + 'Title: ' + response.data.Title +
                 "\n" + 'Year: ' + response.data.Year +
                 "\n" + 'Rated: ' + response.data.Rated +
@@ -172,5 +153,14 @@ if (input === "movie-this"){
     };
 
 //do-what-it-says
-
+function liriSuprise() {
+    fs.readFile("random.txt", "utf8", function(error, data) {
+        if (error) {
+            return console.log(error);
+        }
+        var dataArr = data.split(",");
+        tunes(dataArr[1]);
+        
+    })
+}
 question();
