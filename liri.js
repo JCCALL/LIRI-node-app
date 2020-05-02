@@ -4,7 +4,7 @@ var keys = require("./keys.js");
 var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotify);
 var moment = require('moment');
-var axios = require('axios').default;
+var axios = require('axios');
 var fs = require("fs");
 var inquirer = require("inquirer");
 
@@ -55,8 +55,8 @@ function question() {
             case "Have LIRI choose.":
                 liriSuprise()
                 break;
-            case "Depart from the Great LIRI":
-                console.log("The Great and Powerful LIRI comands you to depart from my sight!")
+            case "Exit":
+                console.log("\nThe Great and Powerful LIRI comands you to depart from my sight!\n")
                 break;
         }
     })
@@ -96,8 +96,8 @@ function tunes(songName) {
     if (!songName){
         songName= "Black Betty"
     }
-    spotify.search({type: 'track', query: songName, limit: 5 }).then(function(response) {
-       for (var i = 0; i < 5; i++) {
+    spotify.search({type: 'track', query: songName, limit: 2 }).then(function(response) {
+       for (var i = 0; i < 2; i++) {
            var result =
                 "\n|+-+-+-+-+-+->The Great LIRI FOUND THIS FOR YOU<+-+-+-+-+-+-|\n" +
                 "\n" + "Artist/Band: " + response.tracks.items[i].album.artists[0].name +
